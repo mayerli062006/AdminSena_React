@@ -1,0 +1,85 @@
+#carouselSena img {
+  height: 450px;
+  object-fit: cover;
+}
+
+*/ .carousel-caption {
+  color: black;
+  background-color: rgba(255, 255, 255, 0.75);
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.resumen-card {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.resumen-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+.icono-card {
+  width: 75px;
+  height: 75px;
+
+  margin: 0 auto 20px auto;
+
+  border-radius: 50%;
+
+  background-color: #e8f5e9;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+.icono-card i {
+  font-size: 35px;
+
+  color: #16780c;
+}
+
+.numero {
+  color: #16780c;
+
+  font-size: 35px;
+}
+
+.anuncio-card {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.anuncio-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+.anuncio-icono {
+  width: 55px;
+  height: 55px;
+
+  border-radius: 12px;
+
+  background-color: #e8f5e9;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+.anuncio-icono i {
+  font-size: 26px;
+
+  color: #16780c;
+}
