@@ -1,305 +1,145 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
 
-function Edit() {
-  // Obtener el ID del aprendiz desde la URL
-  const { id } = useParams();
-
-  // Permite regresar a otra página
-  const navigate = useNavigate();
-
-  // Datos del aprendiz
-  const [apprentice, setApprentice] = useState({
-    name: "",
-    email: "",
-    cell_number: "",
-    course_id: "",
-    computer_id: "",
+export default function Edit({ apprentice, courses = [], computers = [], onUpdate, onNavigate }) {
+  // Inicializamos el estado con los valores que provienen de la BD o un objeto vacío
+  const [formData, setFormData] = useState({
+    name: apprentice?.name_apren || '',
+    email: apprentice?.email || '',
+    cell_number: apprentice?.cell || '',
+    course_id: apprentice?.course_id || '',
+    computer_id: apprentice?.computer_id || ''
   });
 
-  // Lista de cursos
-  const [courses, setCourses] = useState([]);
-
-  // Lista de computadores
-  const [computers, setComputers] = useState([]);
-
-  // Mensaje de error
-  const [mensaje, setMensaje] = useState("");
-
-  // Estado de carga
-  const [cargando, setCargando] = useState(true);
-
-  // ==========================================
-  // CARGAR DATOS
-  // ==========================================
-
+  // Efecto para actualizar el formulario si cambia la prop apprentice
   useEffect(() => {
-    const cargarDatos = async () => {
-      try {
-        // Obtener información del aprendiz
-        const respuestaAprendiz = await fetch(
-          `http://127.0.0.1:8000/api/apprentices/${id}`,
-        );
-
-        const datosAprendiz = await respuestaAprendiz.json();
-
-        console.log("Aprendiz:", datosAprendiz);
-
-        // Colocar los datos actuales en el formulario
-        setApprentice({
-          name: datosAprendiz.name_apren || "",
-          email: datosAprendiz.email || "",
-          cell_number: datosAprendiz.cell || "",
-          course_id: datosAprendiz.course_id || "",
-          computer_id: datosAprendiz.computer_id || "",
-        });
-
-        // Obtener cursos
-        const respuestaCursos = await fetch(
-          "http://127.0.0.1:8000/api/courses",
-        );
-
-        const datosCursos = await respuestaCursos.json();
-
-        setCourses(datosCursos);
-
-        // Obtener computadores
-        const respuestaComputadores = await fetch(
-          "http://127.0.0.1:8000/api/computers",
-        );
-
-        const datosComputadores = await respuestaComputadores.json();
-
-        setComputers(datosComputadores);
-      } catch (error) {
-        console.error("Error:", error);
-
-        setMensaje("No se pudieron cargar los datos.");
-      } finally {
-        setCargando(false);
-      }
-    };
-
-    cargarDatos();
-  }, [id]);
-
-  // ==========================================
-  // CAMBIAR DATOS DEL FORMULARIO
-  // ==========================================
+    if (apprentice) {
+      setFormData({
+        name: apprentice.name_apren || '',
+        email: apprentice.email || '',
+        cell_number: apprentice.cell || '',
+        course_id: apprentice.course_id || '',
+        computer_id: apprentice.computer_id || ''
+      });
+    }
+  }, [apprentice]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setApprentice({
-      ...apprentice,
-      [name]: value,
-    });
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
   };
 
-  // ==========================================
-  // ACTUALIZAR APRENDIZ
-  // ==========================================
-
-  const handleSubmit = async (e) => {
-    // Evita que la página se recargue
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    try {
-      const respuesta = await fetch(
-        `http://127.0.0.1:8000/api/apprentices/${id}`,
-        {
-          method: "PUT",
-
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-
-          body: JSON.stringify({
-            name_apren: apprentice.name,
-
-            email: apprentice.email,
-
-            cell: apprentice.cell_number,
-
-            course_id: apprentice.course_id,
-
-            computer_id: apprentice.computer_id,
-          }),
-        },
-      );
-
-      if (!respuesta.ok) {
-        throw new Error("No se pudo actualizar el aprendiz");
-      }
-
-      alert("Aprendiz actualizado correctamente");
-
-      // Regresar a la lista
-      navigate("/apprentices");
-    } catch (error) {
-      console.error(error);
-
-      setMensaje("Ocurrió un error al actualizar el aprendiz.");
+    
+    if (onUpdate) {
+      onUpdate(apprentice?.id, formData);
+    } else {
+      console.log('Datos actualizados a enviar:', formData);
     }
   };
 
-  // ==========================================
-  // MENSAJE DE CARGA
-  // ==========================================
-
-  if (cargando) {
-    return (
-      <div className="container mt-5">
-        <div className="text-center">
-          <h3>Cargando información...</h3>
-        </div>
-      </div>
-    );
-  }
-
-  // ==========================================
-  // FORMULARIO
-  // ==========================================
-
   return (
     <div className="container mt-5">
-      <div className="card shadow border-0">
-        {/* ENCABEZADO */}
+      <h1>Actualizar Aprendiz</h1>
+      <br />
 
-        <div
-          className="card-header text-white"
-          style={{
-            backgroundColor: "#25c72f",
-          }}
+      <form onSubmit={handleSubmit}>
+        
+        {/* Campo Nombre */}
+        <div className="mb-3">
+          <label className="form-label">Nombre:</label>
+          <input
+            type="text"
+            name="name"
+            className="form-control"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Campo Email */}
+        <div className="mb-3">
+          <label className="form-label">Email:</label>
+          <input
+            type="email"
+            name="email"
+            className="form-control"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Campo Número de Celular */}
+        <div className="mb-3">
+          <label className="form-label">Número de Celular:</label>
+          <input
+            type="number"
+            name="cell_number"
+            className="form-control"
+            value={formData.cell_number}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Select Curso */}
+        <div className="mb-3">
+          <label className="form-label">Curso:</label>
+          <select
+            name="course_id"
+            className="form-control"
+            value={formData.course_id}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Seleccione un curso</option>
+            {courses.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.name_curso}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Select Equipo */}
+        <div className="mb-3">
+          <label className="form-label">Equipo:</label>
+          <select
+            name="computer_id"
+            className="form-control"
+            value={formData.computer_id}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Seleccione un equipo</option>
+            {computers.map((computer) => (
+              <option key={computer.id} value={computer.id}>
+                {computer.numero}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Botón Actualizar */}
+        <button type="submit" className="btn btn-primary me-2">
+          Actualizar Aprendiz
+        </button>
+
+        {/* Botón Volver */}
+        <button
+          type="button"
+          className="btn btn-success"
+          onClick={() => onNavigate && onNavigate('index')}
         >
-          <h2 className="mb-0">
-            <i className="bi bi-person-fill-gear me-2"></i>
-            Actualizar Aprendiz
-          </h2>
-        </div>
+          <i className="bi bi-arrow-left me-1"></i> Volver
+        </button>
 
-        {/* CUERPO */}
-
-        <div className="card-body">
-          {mensaje && <div className="alert alert-danger">{mensaje}</div>}
-
-          <form onSubmit={handleSubmit}>
-            {/* NOMBRE */}
-
-            <div className="mb-3">
-              <label className="form-label">Nombre:</label>
-
-              <input
-                type="text"
-                name="name"
-                className="form-control"
-                value={apprentice.name}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {/* EMAIL */}
-
-            <div className="mb-3">
-              <label className="form-label">Email:</label>
-
-              <input
-                type="email"
-                name="email"
-                className="form-control"
-                value={apprentice.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {/* CELULAR */}
-
-            <div className="mb-3">
-              <label className="form-label">Número de Celular:</label>
-
-              <input
-                type="number"
-                name="cell_number"
-                className="form-control"
-                value={apprentice.cell_number}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {/* CURSO */}
-
-            <div className="mb-3">
-              <label className="form-label">Curso:</label>
-
-              <select
-                name="course_id"
-                className="form-select"
-                value={apprentice.course_id}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Seleccione un curso</option>
-
-                {courses.map((course) => (
-                  <option key={course.id} value={course.id}>
-                    {course.name_curso}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* EQUIPO */}
-
-            <div className="mb-4">
-              <label className="form-label">Equipo:</label>
-
-              <select
-                name="computer_id"
-                className="form-select"
-                value={apprentice.computer_id}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Seleccione un equipo</option>
-
-                {computers.map((computer) => (
-                  <option key={computer.id} value={computer.id}>
-                    {computer.numero}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* BOTONES */}
-
-            <button
-              type="submit"
-              className="btn text-white me-2"
-              style={{
-                backgroundColor: "#25c72f",
-              }}
-            >
-              <i className="bi bi-pencil-square me-2"></i>
-              Actualizar Aprendiz
-            </button>
-
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={() => navigate("/apprentices")}
-            >
-              <i className="bi bi-arrow-left me-2"></i>
-              Volver
-            </button>
-          </form>
-        </div>
-      </div>
+      </form>
     </div>
   );
 }
-
-export default Edit;

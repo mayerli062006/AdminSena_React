@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 function ApprenticeIndex() {
-  // Datos temporales de aprendices
-  const [apprentices, setApprentices] = useState([
+
+  // DATOS DE PRUEBA
+  const apprentices = [
     {
       id: 1,
       name: "Mayerli Maca",
@@ -28,72 +29,112 @@ function ApprenticeIndex() {
       course_id: 1,
       computer_id: 3,
     },
-  ]);
-
-  // ==========================================
-  // ELIMINAR APRENDIZ
-  // ==========================================
-
-  const eliminarAprendiz = (id, name) => {
-    const confirmar = window.confirm(
-      `¿Está seguro de eliminar al aprendiz ${name}?`,
-    );
-
-    if (!confirmar) {
-      return;
-    }
-
-    // Elimina el aprendiz de la lista temporal
-    setApprentices(apprentices.filter((apprentice) => apprentice.id !== id));
-
-    alert("Aprendiz eliminado correctamente");
-  };
+  ];
 
   return (
     <div className="container py-4">
-      {/* ================================================= */}
-      {/* TÍTULO */}
-      {/* ================================================= */}
 
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h1 className="fw-bold" style={{ color: "#16780c" }}>
-            Lista de Aprendices
-          </h1>
+      {/* ENCABEZADO */}
+      <div className="card shadow-sm border-0 mb-4">
 
-          <p className="text-muted mb-0">
-            Administración de los aprendices registrados
-          </p>
+        <div className="card-body">
+
+          <div className="d-flex justify-content-between align-items-center">
+
+            <div>
+
+              <h1
+                className="fw-bold mb-1"
+                style={{ color: "#111" }}
+              >
+                <i
+                  className="bi bi-people-fill me-2"
+                  style={{ color: "#25c72f" }}
+                ></i>
+
+                LISTA DE APRENDICES
+              </h1>
+
+              <p className="text-muted mb-3">
+                Administración y consulta de aprendices
+              </p>
+
+              <p>
+                En esta sección puedes consultar la información
+                de los aprendices registrados en el sistema SENA.
+              </p>
+
+              <Link
+                to="/aprendices/create"
+                className="btn btn-sm text-white"
+                style={{
+                  backgroundColor: "#25c72f"
+                }}
+              >
+                <i className="bi bi-plus-circle-fill me-1"></i>
+                Nuevo Aprendiz
+              </Link>
+
+            </div>
+
+          </div>
+
         </div>
 
-        {/* BOTÓN NUEVO APRENDIZ */}
-
-        <Link
-          to="/aprendices/create"
-          className="btn text-white"
-          style={{ backgroundColor: "#16780c" }}
-        >
-          <i className="bi bi-person-plus-fill me-2"></i>
-          Nuevo Aprendiz
-        </Link>
       </div>
 
-      {/* ================================================= */}
-      {/* TABLA */}
-      {/* ================================================= */}
 
-      <div className="card border-0 shadow-sm">
+      {/* LISTADO */}
+
+      <div className="card shadow-sm border-0">
+
         <div className="card-body">
-          <div className="table-responsive">
-            <table
-              id="idApprentice"
-              className="table table-striped table-bordered align-middle"
+
+          <div className="d-flex justify-content-between align-items-center mb-3">
+
+            <div>
+
+              <h3 className="fw-bold mb-1">
+
+                <i
+                  className="bi bi-person-lines-fill me-2"
+                  style={{ color: "#25c72f" }}
+                ></i>
+
+                Aprendices registrados
+
+              </h3>
+
+              <p className="text-muted mb-0">
+                Información de los aprendices del sistema
+              </p>
+
+            </div>
+
+
+            <span
+              className="badge rounded-pill"
+              style={{
+                backgroundColor: "#25c72f"
+              }}
             >
-              {/* ENCABEZADOS */}
+              {apprentices.length} registros
+            </span>
+
+          </div>
+
+
+          {/* TABLA */}
+
+          <div className="table-responsive">
+
+            <table className="table table-striped table-bordered align-middle">
 
               <thead>
+
                 <tr>
-                  <th>Id</th>
+
+                  <th>ID</th>
 
                   <th>Nombre</th>
 
@@ -105,101 +146,144 @@ function ApprenticeIndex() {
 
                   <th>Equipo</th>
 
-                  <th className="text-center">Mostrar</th>
+                  <th className="text-center">
+                    Acción
+                  </th>
 
-                  <th className="text-center">Editar</th>
-
-                  <th className="text-center">Eliminar</th>
                 </tr>
+
               </thead>
 
-              {/* CUERPO */}
 
               <tbody>
+
                 {apprentices.map((apprentice) => (
+
                   <tr key={apprentice.id}>
+
                     {/* ID */}
 
-                    <td>{apprentice.id}</td>
+                    <td>
+                      {apprentice.id}
+                    </td>
+
 
                     {/* NOMBRE */}
 
                     <td>
+
                       <i
                         className="bi bi-person-fill me-2"
-                        style={{ color: "#16780c" }}
+                        style={{
+                          color: "#25c72f"
+                        }}
                       ></i>
 
                       {apprentice.name}
+
                     </td>
+
 
                     {/* EMAIL */}
 
-                    <td>{apprentice.email}</td>
+                    <td>
+                      {apprentice.email}
+                    </td>
+
 
                     {/* TELÉFONO */}
 
-                    <td>{apprentice.cell_number}</td>
+                    <td>
+                      {apprentice.cell_number}
+                    </td>
+
 
                     {/* CURSO */}
 
-                    <td>{apprentice.course_id}</td>
-
-                    {/* COMPUTADOR */}
-
-                    <td>{apprentice.computer_id}</td>
-
-                    {/* ================================================= */}
-                    {/* MOSTRAR */}
-                    {/* ================================================= */}
-
-                    <td className="text-center">
-                      <Link
-                        to={`/aprendices/${apprentice.id}`}
-                        className="btn btn-primary btn-sm"
-                      >
-                        <i className="bi bi-eye-fill me-1"></i>
-                        Mostrar
-                      </Link>
+                    <td>
+                      {apprentice.course_id}
                     </td>
 
-                    {/* ================================================= */}
-                    {/* EDITAR */}
-                    {/* ================================================= */}
 
-                    <td className="text-center">
-                      <Link
-                        to={`/aprendices/${apprentice.id}/edit`}
-                        className="btn btn-warning btn-sm"
-                      >
-                        <i className="bi bi-pencil-fill me-1"></i>
-                        Editar
-                      </Link>
+                    {/* EQUIPO */}
+
+                    <td>
+                      {apprentice.computer_id}
                     </td>
 
-                    {/* ================================================= */}
-                    {/* ELIMINAR */}
-                    {/* ================================================= */}
+
+                    {/* ACCIONES */}
 
                     <td className="text-center">
-                      <button
-                        type="button"
-                        className="btn btn-danger btn-sm"
-                        onClick={() =>
-                          eliminarAprendiz(apprentice.id, apprentice.name)
-                        }
-                      >
-                        <i className="bi bi-trash-fill me-1"></i>
-                        Eliminar
-                      </button>
+
+                      <div className="d-flex justify-content-center gap-1">
+
+                        {/* MOSTRAR */}
+
+                        <Link
+                          to={`/aprendices/${apprentice.id}`}
+                          className="btn btn-success btn-sm"
+                        >
+
+                          <i className="bi bi-eye-fill me-1"></i>
+
+                          Mostrar
+
+                        </Link>
+
+
+                        {/* EDITAR */}
+
+                        <Link
+                          to={`/aprendices/${apprentice.id}/edit`}
+                          className="btn btn-warning btn-sm"
+                        >
+
+                          <i className="bi bi-pencil-fill me-1"></i>
+
+                          Editar
+
+                        </Link>
+
+
+                        {/* ELIMINAR */}
+
+                        <button
+                          type="button"
+                          className="btn btn-danger btn-sm"
+                          onClick={() => {
+
+                            alert(
+                              `Aquí se eliminaría: ${apprentice.name}`
+                            );
+
+                          }}
+                        >
+
+                          <i className="bi bi-trash-fill me-1"></i>
+
+                          Eliminar
+
+                        </button>
+
+                      </div>
+
                     </td>
+
                   </tr>
+
                 ))}
+
               </tbody>
+
             </table>
+
           </div>
+
         </div>
+
       </div>
+
     </div>
   );
 }

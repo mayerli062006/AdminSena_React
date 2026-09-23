@@ -1,18 +1,73 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
-function AreaCreate() {
+function AreaEdit() {
 
-  const [name, setName] = useState("");
+  const { id } = useParams();
 
+
+  // DATOS DE PRUEBA
+
+  const areas = [
+    {
+      id: 1,
+      name: "Programación",
+    },
+    {
+      id: 2,
+      name: "Diseño",
+    },
+    {
+      id: 3,
+      name: "Contabilidad",
+    },
+  ];
+
+
+  // BUSCAR ÁREA
+
+  const area = areas.find(
+    (item) => item.id === Number(id)
+  );
+
+
+  // ESTADO DEL NOMBRE
+
+  const [name, setName] = useState(
+    area ? area.name : ""
+  );
+
+
+  // ACTUALIZAR
 
   const handleSubmit = (e) => {
 
     e.preventDefault();
 
-    alert(`Área creada: ${name}`);
+    alert(`Área actualizada: ${name}`);
 
   };
+
+
+  // SI NO EXISTE
+
+  if (!area) {
+
+    return (
+
+      <div className="container py-5">
+
+        <div className="alert alert-danger">
+
+          Área no encontrada.
+
+        </div>
+
+      </div>
+
+    );
+
+  }
 
 
   return (
@@ -30,9 +85,9 @@ function AreaCreate() {
 
           <h3 className="mb-0">
 
-            <i className="bi bi-plus-circle-fill me-2"></i>
+            <i className="bi bi-pencil-fill me-2"></i>
 
-            Nueva Área
+            Actualizar Área
 
           </h3>
 
@@ -56,7 +111,6 @@ function AreaCreate() {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Ingrese el nombre del área"
                 value={name}
                 onChange={(e) =>
                   setName(e.target.value)
@@ -67,7 +121,7 @@ function AreaCreate() {
             </div>
 
 
-            {/* BOTONES */}
+            {/* ACTUALIZAR */}
 
             <button
               type="submit"
@@ -77,12 +131,14 @@ function AreaCreate() {
               }}
             >
 
-              <i className="bi bi-save-fill me-2"></i>
+              <i className="bi bi-pencil-square me-2"></i>
 
-              Guardar Área
+              Actualizar Área
 
             </button>
 
+
+            {/* VOLVER */}
 
             <Link
               to="/areas"
@@ -107,4 +163,4 @@ function AreaCreate() {
 
 }
 
-export default AreaCreate;
+export default AreaEdit;
